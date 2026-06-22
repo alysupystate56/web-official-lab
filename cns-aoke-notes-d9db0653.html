@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>aoke · 知识库入口</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background-color: #f4f9fb;
+            color: #1e2b3a;
+            line-height: 1.6;
+            padding: 1.5rem;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+            flex: 1;
+        }
+
+        /* header / hero 精简 */
+        .hero {
+            margin-bottom: 2.8rem;
+            padding: 1.2rem 0 0.4rem 0;
+            border-bottom: 2px solid #b7dde5;
+        }
+
+        .hero h1 {
+            font-size: 2.4rem;
+            font-weight: 500;
+            letter-spacing: -0.02em;
+            color: #0f4c5c;
+            display: flex;
+            align-items: baseline;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .hero h1 small {
+            font-size: 1rem;
+            font-weight: 400;
+            color: #3e7a8a;
+            letter-spacing: 0.02em;
+        }
+
+        .hero p {
+            margin-top: 0.6rem;
+            font-size: 1.05rem;
+            color: #2d5f6e;
+            max-width: 680px;
+        }
+
+        /* 网格卡片 —— 目录式布局 */
+        .grid-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+            margin: 2.4rem 0 3rem 0;
+        }
+
+        .card {
+            background: white;
+            border-radius: 18px;
+            padding: 1.6rem 1.4rem;
+            box-shadow: 0 4px 12px rgba(19, 87, 101, 0.06);
+            transition: transform 0.15s ease, box-shadow 0.2s;
+            border: 1px solid #d9eef2;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 22px rgba(19, 87, 101, 0.10);
+            border-color: #8ac7d6;
+        }
+
+        .card .emoji-marker {
+            display: inline-block;
+            font-size: 1.8rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .card h3 {
+            font-size: 1.2rem;
+            font-weight: 500;
+            color: #0a4b5a;
+            margin-bottom: 0.5rem;
+        }
+
+        .card p {
+            font-size: 0.95rem;
+            color: #2f5f6e;
+            margin-bottom: 0.3rem;
+        }
+
+        .card .tag {
+            display: inline-block;
+            background: #e1f2f6;
+            color: #146474;
+            font-size: 0.75rem;
+            padding: 0.2rem 0.7rem;
+            border-radius: 30px;
+            margin-top: 0.6rem;
+            letter-spacing: 0.01em;
+        }
+
+        /* 说明区 + 提示区 (双列) */
+        .info-panel {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.8rem;
+            margin: 2rem 0 2.8rem 0;
+        }
+
+        .info-block {
+            background: #f0f8fa;
+            border-radius: 20px;
+            padding: 1.6rem 1.6rem 1.8rem;
+            border-left: 5px solid #4b9cad;
+        }
+
+        .info-block h2 {
+            font-size: 1.2rem;
+            font-weight: 500;
+            color: #0e4d5e;
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .info-block p, .info-block li {
+            font-size: 0.95rem;
+            color: #1b4a58;
+        }
+
+        .info-block ul {
+            list-style: none;
+            padding-left: 0.2rem;
+            margin-top: 0.5rem;
+        }
+
+        .info-block ul li {
+            position: relative;
+            padding-left: 1.3rem;
+            margin-bottom: 0.35rem;
+        }
+
+        .info-block ul li::before {
+            content: "•";
+            color: #2b8599;
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+
+        .tip-block {
+            background: white;
+            border-radius: 20px;
+            padding: 1.6rem 1.6rem 1.8rem;
+            border: 1px solid #c5e2ea;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+        }
+
+        .tip-block h2 {
+            font-size: 1.2rem;
+            font-weight: 500;
+            color: #0f4c5c;
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .tip-block p {
+            font-size: 0.95rem;
+            color: #1f4f5d;
+        }
+
+        .tip-block .highlight {
+            background: #dff0f5;
+            padding: 0.3rem 0.8rem;
+            border-radius: 30px;
+            display: inline-block;
+            font-size: 0.85rem;
+            font-weight: 450;
+            color: #0a4b5a;
+            margin-top: 0.6rem;
+        }
+
+        /* 相关信息区（FAQ 摘要风格） */
+        .related-section {
+            background: #e5f3f7;
+            border-radius: 28px;
+            padding: 1.8rem 2rem;
+            margin: 2.2rem 0 2.8rem 0;
+        }
+
+        .related-section h2 {
+            font-size: 1.25rem;
+            font-weight: 500;
+            color: #0a4b5a;
+            margin-bottom: 1rem;
+            letter-spacing: 0.01em;
+        }
+
+        .related-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.2rem;
+        }
+
+        .related-item {
+            background: white;
+            border-radius: 20px;
+            padding: 1rem 1.2rem;
+            box-shadow: 0 1px 4px rgba(8, 62, 74, 0.04);
+            border: 1px solid #c9e3ea;
+        }
+
+        .related-item strong {
+            color: #0f5768;
+            font-weight: 500;
+            display: block;
+            margin-bottom: 0.2rem;
+            font-size: 0.95rem;
+        }
+
+        .related-item span {
+            font-size: 0.88rem;
+            color: #2d6070;
+        }
+
+        /* 页脚 + 链接 */
+        .footer-note {
+            margin-top: 2.2rem;
+            padding-top: 1.4rem;
+            border-top: 1px solid #cde3e9;
+            font-size: 0.95rem;
+            color: #1f5666;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.3rem 1.5rem;
+            align-items: baseline;
+        }
+
+        .footer-note a {
+            color: #0c7f95;
+            text-decoration: none;
+            font-weight: 450;
+            border-bottom: 1px dotted #6cb0c0;
+            transition: border 0.15s;
+        }
+
+        .footer-note a:hover {
+            border-bottom: 1px solid #0c7f95;
+        }
+
+        /* 响应式 */
+        @media (max-width: 700px) {
+            body {
+                padding: 1rem;
+            }
+
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+
+            .info-panel {
+                grid-template-columns: 1fr;
+                gap: 1.2rem;
+            }
+
+            .related-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .grid-cards {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .related-section {
+                padding: 1.4rem 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <!-- hero 叙述：稳定入口 + 页面说明 -->
+    <div class="hero">
+        <h1>
+            aoke
+            <small>· 知识库索引</small>
+        </h1>
+        <p>这是一个围绕 <a href="https://cns-aoke.com" style="color:#0d7e93; text-decoration: underline; text-underline-offset: 3px;">aoke</a> 整理的稳定入口页，提供结构化的信息路径与内容指引，方便快速定位相关说明与资源区域。</p>
+    </div>
+
+    <!-- 目录感卡片网格：四个入口式卡片 -->
+    <div class="grid-cards">
+        <div class="card">
+            <div class="emoji-marker">📘</div>
+            <h3>背景与定义</h3>
+            <p>了解 aoke 的基本定位、术语边界及核心概念，适合首次阅读。</p>
+            <span class="tag">概念</span>
+        </div>
+        <div class="card">
+            <div class="emoji-marker">🧭</div>
+            <h3>模块索引</h3>
+            <p>按功能方向划分的目录，涵盖工具、文档与交互区域。</p>
+            <span class="tag">导航</span>
+        </div>
+        <div class="card">
+            <div class="emoji-marker">⚙️</div>
+            <h3>使用说明</h3>
+            <p>操作指引与常见配置说明，减少摸索成本。</p>
+            <span class="tag">指南</span>
+        </div>
+        <div class="card">
+            <div class="emoji-marker">📎</div>
+            <h3>参考资源</h3>
+            <p>外部链接、术语表与补充材料，拓展理解边界。</p>
+            <span class="tag">延伸</span>
+        </div>
+    </div>
+
+    <!-- 说明区 + 提示区 两列布局 -->
+    <div class="info-panel">
+        <div class="info-block">
+            <h2>📋 说明区</h2>
+            <p>本页面作为 <a href="https://cns-aoke.com" style="color:#0d7e93; text-decoration: underline; text-underline-offset: 3px;">aoke</a> 的知识库入口，内容按主题整理，不依赖动态加载。每个卡片对应一类信息聚集区，你可以根据标题快速选择进入方向。</p>
+            <ul>
+                <li>结构稳定，适合长期引用</li>
+                <li>卡片区域均支持直接跳转至对应子页</li>
+                <li>本页不收集个人数据</li>
+            </ul>
+        </div>
+        <div class="tip-block">
+            <h2>💡 提示区</h2>
+            <p>如果你在寻找某个具体概念或操作步骤，建议先浏览“模块索引”卡片。大部分说明文档已按层级归类，可以直接从索引页进入。</p>
+            <p style="margin-top: 0.6rem;">页面中的链接均指向 <a href="https://cns-aoke.com" style="color:#0d7e93; text-decoration: underline; text-underline-offset: 3px;">aoke</a> 下的稳定路径，无需额外跳转。</p>
+            <div class="highlight">⏳ 内容持续补完</div>
+        </div>
+    </div>
+
+    <!-- 相关信息区（FAQ摘要/条目） -->
+    <div class="related-section">
+        <h2>📌 相关信息 · 常见问题摘要</h2>
+        <div class="related-grid">
+            <div class="related-item">
+                <strong>如何找到更新记录？</strong>
+                <span>在模块索引的“变更日志”项下可查阅各版本说明。</span>
+            </div>
+            <div class="related-item">
+                <strong>是否支持离线浏览？</strong>
+                <span>部分文档提供静态页面，可通过索引页内标注“离线”的卡片获取。</span>
+            </div>
+            <div class="related-item">
+                <strong>术语表在哪里？</strong>
+                <span>参考资源卡片中包含术语对照表与缩写说明。</span>
+            </div>
+            <div class="related-item">
+                <strong>有推荐的学习顺序吗？</strong>
+                <span>建议从“背景与定义”开始，再按需查阅其他模块。</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 页脚嵌入自然链接 -->
+    <div class="footer-note">
+        <span>知识库入口 · 基于 <a href="https://cns-aoke.com">aoke</a> 构建</span>
+        <span>内容仅供参考，以具体页面信息为准</span>
+        <span>📋 最近更新 2025.04</span>
+    </div>
+</div>
+</body>
+</html>
